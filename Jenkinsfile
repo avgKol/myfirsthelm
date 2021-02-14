@@ -9,7 +9,7 @@ pipeline {
 
     stage('Package') {
       steps {
-        readProperties(file: 'Configuration.properties')
+        def props = readProperties(file: 'Configuration.properties')
         echo "running for the app  ${props.application_name}"
         sh '''helm package .
 
