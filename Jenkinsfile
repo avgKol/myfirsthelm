@@ -7,13 +7,19 @@ pipeline {
       }
     }
 
-    stage('Store') {
+    stage('Package') {
       steps {
         config = readProperties file: 'Configuration'
         echo 'running for the app ' ${config.application_name}
         sh '''helm package .
 
 curl -uadmin:APAP3ArKZtCBVsPARwg4nZmiTng -T  persons-ms/persons-ms-0.2.0.tgz "http://127.0.0.1:8081/artifactory/helm-local-artifactory/"'''
+      }
+    }
+
+    stage('Store') {
+      steps {
+        sh 'TBD'
       }
     }
 
