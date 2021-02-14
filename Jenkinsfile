@@ -3,7 +3,7 @@ properties = null
 def loadProperties() {
     node {
         checkout scm
-        config = readProperties file: 'Configuration'
+        config = readProperties file: 'Configuration.properties'
         echo "Immediate one ${config.application_name}"
     }
 }
