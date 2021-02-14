@@ -1,3 +1,13 @@
+properties = null
+
+def loadProperties() {
+    node {
+        checkout scm
+        config = readProperties file: 'Configuration'
+        echo "Immediate one ${config.application_name}"
+    }
+}
+
 pipeline {
   agent any
   stages {
@@ -9,8 +19,8 @@ pipeline {
 
     stage('Package') {
       steps {
-        config = readProperties file: 'Configuration'
-        echo 'running for the app ' ${config.application_name}
+        
+        echo 'running for the app  ${config.application_name}'
         sh '''helm package .
 
 curl -uadmin:APAP3ArKZtCBVsPARwg4nZmiTng -T  persons-ms/persons-ms-0.2.0.tgz "http://127.0.0.1:8081/artifactory/helm-local-artifactory/"'''
