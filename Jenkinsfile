@@ -7,7 +7,7 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Package') {
       steps {
         sh '''helm package .
 
