@@ -1,0 +1,11 @@
+application_name           = my-first-helm
+project_dir                = /go/src/gitlab.com/opstree/ot-go-webapp
+image_name                 = ot-go-webapp
+image_version              = 1.0
+image_description          = Opstree Golang Web Application
+image_registry             = opstreedevops
+image_secret               = dockersecret
+image_user                 = abhishekdubey510
+image_registry_url         = 
+dockerfile_path            = Dockerfile
+helm_chart_dir             = .
