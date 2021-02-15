@@ -4,12 +4,12 @@ node("master") {
         config = readProperties file: 'Configuration.properties'
     }
     packageHelmChart(
-        helmChartDir: "${config.helm_chart_dir}"
+        helmChartDir: "${config.helm_chart_dir}",
         helmChartVersion: "${config.helm_chart_version}"
     )
     storeHelmChart(
         helmChartDir: "${config.helm_chart_dir}",
-        applicationName: "${config.application_name}"
+        applicationName: "${config.application_name}",
         helmChartVersion: "${config.helm_chart_version}"
     )
     testHelmChart(
