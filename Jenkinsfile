@@ -56,7 +56,7 @@ def applyHelmChart(Map stepParams) {
         stage("Deploying the Helm Chart") {
             dir("${stepParams.helmChartDir}") {
                 input "Deploy to dev?"
-                sh "helm upgrade ${stepParams.applicationName} ./ -f values-dev.yaml --namespace helm-dev --install"
+                sh "/usr/local/bin/helm upgrade ${stepParams.applicationName} ./ -f values-dev.yaml --namespace helm-dev --install"
             }
         }
     } catch (Exception e) {
