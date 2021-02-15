@@ -12,10 +12,6 @@ node("master") {
         applicationName: "${config.application_name}",
         helmChartVersion: "${config.helm_chart_version}"
     )
-    testHelmChart(
-//        helmChartDir: "${config.helm_chart_dir}",
-//        applicationName: "${config.application_name}"
-    )
     notificationStage(
         status: "good",
         environment: "dev",
@@ -46,20 +42,6 @@ def storeHelmChart(Map stepParams) {
         }
     } catch (Exception e) {
         echo "There is an error while setting up application. Please check the logs!!!!"
-        echo e.toString()
-        throw e
-    }
-}
-
-def testHelmChart(Map stepParams) {
-    try {
-        stage("Testing GoWebApp Application") {
-            dir("${stepParams.helmChartDir}") {
-                sh "helm test ${stepParams.applicationName} --namespace go-webapp"
-            }
-        }
-    } catch (Exception e) {
-        echo "There is an error while testing application. Please check the logs!!!!"
         echo e.toString()
         throw e
     }
