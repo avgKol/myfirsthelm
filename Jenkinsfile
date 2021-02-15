@@ -27,7 +27,7 @@ def packageHelmChart(Map stepParams) {
     try {
         stage("Packaging helm chart for application") {
             dir("${stepParams.helmChartDir}") {
-                sh "helm package ./ --version ${stepParams.helmChartVersion}"
+                sh "/usr/local/bin/helm package ./ --version ${stepParams.helmChartVersion}"
             }
         }
     } catch (Exception e) {
