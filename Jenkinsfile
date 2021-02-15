@@ -1,18 +1,20 @@
 node("master") {
     stage("Checking out codebase") {
         checkout scm
-        config = readProperties file: 'Configuration'
+        config = readProperties file: 'Configuration.properties'
     }
-    lintHelmChart(
+    packageHelmChart(
         helmChartDir: "${config.helm_chart_dir}"
+        helmChartVersion: "${config.helm_chart_version}"
     )
-    applyHelmChart(
+    storeHelmChart(
         helmChartDir: "${config.helm_chart_dir}",
         applicationName: "${config.application_name}"
+        helmChartVersion: "${config.helm_chart_version}"
     )
     testHelmChart(
-        helmChartDir: "${config.helm_chart_dir}",
-        applicationName: "${config.application_name}"
+//        helmChartDir: "${config.helm_chart_dir}",
+//        applicationName: "${config.application_name}"
     )
     notificationStage(
         status: "good",
@@ -21,25 +23,25 @@ node("master") {
     )
 }
 
-def lintHelmChart(Map stepParams) {
+def packageHelmChart(Map stepParams) {
     try {
-        stage("Linting helm chart for application") {
+        stage("Packaging helm chart for application") {
             dir("${stepParams.helmChartDir}") {
-                sh "helm lint ./"
+                sh "helm package ./ --version ${stepParams.helmChartVersion}"
             }
         }
     } catch (Exception e) {
-        echo "There is an error while linting helm chart. Please check the logs!!!!"
+        echo "There is an error while packaging helm chart. Please check the logs!!!!"
         echo e.toString()
         throw e
     }
 }
 
-def applyHelmChart(Map stepParams) {
+def storeHelmChart(Map stepParams) {
     try {
-        stage("Setting up the GoWebApp application") {
+        stage("Storing the Helm chart") {
             dir("${stepParams.helmChartDir}") {
-                sh "helm upgrade ${stepParams.applicationName} ./ -f values.yaml --namespace go-webapp --install"
+                sh "curl -uadmin:APAP3ArKZtCBVsPARwg4nZmiTng -T   ${stepParams.applicationName}-${stepParams.helmChartVersion}.tgz \"http://127.0.0.1:8081/artifactory/helm-local-artifactory/\""
             }
         }
     } catch (Exception e) {
