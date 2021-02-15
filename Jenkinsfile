@@ -12,10 +12,18 @@ node("master") {
         applicationName: "${config.application_name}",
         helmChartVersion: "${config.helm_chart_version}"
     )
-    applyHelmChart(
+    applyHelmChartDev(
         helmChartDir: "${config.helm_chart_dir}",
         applicationName: "${config.application_name}"
-    )    
+    )  
+    applyHelmChartQa(
+        helmChartDir: "${config.helm_chart_dir}",
+        applicationName: "${config.application_name}"
+    )
+    applyHelmChartProd(
+        helmChartDir: "${config.helm_chart_dir}",
+        applicationName: "${config.application_name}"
+    )            
     notificationStage(
         status: "good",
         environment: "dev",
@@ -51,12 +59,42 @@ def storeHelmChart(Map stepParams) {
     }
 }
 
-def applyHelmChart(Map stepParams) {
+def applyHelmChartDev(Map stepParams) {
     try {
-        stage("Deploying the Helm Chart") {
+        stage("Deploying the Helm Chart to DEV") {
             dir("${stepParams.helmChartDir}") {
-                input "Deploy to dev?"
+                input "Deploy to DEV?"
                 sh "/usr/local/bin/helm upgrade ${stepParams.applicationName} ./ -f values-dev.yaml --namespace helm-dev --install"
+            }
+        }
+    } catch (Exception e) {
+        echo "There is an error while setting up application. Please check the logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def applyHelmChartQa(Map stepParams) {
+    try {
+        stage("Deploying the Helm Chart to QA") {
+            dir("${stepParams.helmChartDir}") {
+                input "Deploy to QA?"
+                sh "/usr/local/bin/helm upgrade ${stepParams.applicationName} ./ -f values-dev.yaml --namespace helm-qa --install"
+            }
+        }
+    } catch (Exception e) {
+        echo "There is an error while setting up application. Please check the logs!!!!"
+        echo e.toString()
+        throw e
+    }
+}
+
+def applyHelmChartProd(Map stepParams) {
+    try {
+        stage("Deploying the Helm Chart to PROD") {
+            dir("${stepParams.helmChartDir}") {
+                input "Deploy to PROD?"
+                sh "/usr/local/bin/helm upgrade ${stepParams.applicationName} ./ -f values-dev.yaml --namespace helm-prod --install"
             }
         }
     } catch (Exception e) {
