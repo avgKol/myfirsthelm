@@ -79,7 +79,7 @@ def applyHelmChartQa(Map stepParams) {
         stage("Deploying the Helm Chart to QA") {
             dir("${stepParams.helmChartDir}") {
                 input "Deploy to QA?"
-                sh "/usr/local/bin/helm upgrade ${stepParams.applicationName} ./ -f values-dev.yaml --namespace helm-qa --install"
+                sh "/usr/local/bin/helm upgrade ${stepParams.applicationName} ./ -f values-qa.yaml --namespace helm-qa --install"
             }
         }
     } catch (Exception e) {
@@ -94,7 +94,7 @@ def applyHelmChartProd(Map stepParams) {
         stage("Deploying the Helm Chart to PROD") {
             dir("${stepParams.helmChartDir}") {
                 input "Deploy to PROD?"
-                sh "/usr/local/bin/helm upgrade ${stepParams.applicationName} ./ -f values-dev.yaml --namespace helm-prod --install"
+                sh "/usr/local/bin/helm upgrade ${stepParams.applicationName} ./ -f values-prod.yaml --namespace helm-prod --install"
             }
         }
     } catch (Exception e) {
